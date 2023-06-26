@@ -1,6 +1,7 @@
 kind: Service
 metadata:
   name: redis
+  namespace: redis
   labels:
     app: redis
 spec:
