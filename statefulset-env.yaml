@@ -1,0 +1,62 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx
+  labels:
+    app: nginx
+spec:
+  ports:
+  - port: 80
+    name: web
+  clusterIP: None
+  selector:
+    app: nginx
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: web
+spec:
+  serviceName: "busybox"
+  replicas: 2
+  selector:
+    matchLabels:
+      app: busybox
+  template:
+    metadata:
+      labels:
+        app: busybox
+    spec:
+      containers:
+      - name: busybox
+        image: registry.k8s.io/busybox
+        command: [ "sh", "-c"]
+        args:
+        - while true; do
+          echo -en '\n';
+          printenv MY_NODE_NAME MY_POD_NAME MY_POD_NAMESPACE;
+          printenv MY_POD_IP MY_POD_SERVICE_ACCOUNT;
+          sleep 10;
+          done;
+        env:
+        - name: MY_NODE_NAME
+          valueFrom:
+          fieldRef:
+            fieldPath: spec.nodeName
+        - name: MY_POD_NAME
+          valueFrom:
+          fieldRef:
+            fieldPath: metadata.name
+        - name: MY_POD_NAMESPACE
+          valueFrom:
+          fieldRef:
+            fieldPath: metadata.namespace
+        - name: MY_POD_IP
+          valueFrom:
+          fieldRef:
+            fieldPath: status.podIP
+        - name: MY_POD_SERVICE_ACCOUNT
+          valueFrom:
+          fieldRef:
+            fieldPath: spec.serviceAccountName
+
