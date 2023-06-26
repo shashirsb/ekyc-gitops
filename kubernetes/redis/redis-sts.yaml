@@ -52,7 +52,6 @@ spec:
           mountPath: /etc
       volumes:
       - name: config-map
-        emptyDir: {}
         configMap:
           name: redis-ss-configuration                  
   volumeClaimTemplates:
