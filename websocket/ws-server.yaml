@@ -1,0 +1,47 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: ws
+  labels:
+    app: ws
+spec:
+  type: LoadBalancer
+  ports:
+  - port: 8080
+    name: ws-svc
+  selector:
+    app: ws
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: ws
+spec:
+  serviceName: "ws"
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ws
+  template:
+    metadata:
+      labels:
+        app: ws
+    spec:
+      containers:
+      - name: ws
+        image: docker.io/shashioracle/ws-server:v1
+        ports:
+        - containerPort: 8080
+          name: ws
+        volumeMounts:
+        - name: www
+          mountPath: /usr/share/nginx/html
+  volumeClaimTemplates:
+  - metadata:
+      name: www
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      resources:
+        requests:
+          storage: 1Gi
+
