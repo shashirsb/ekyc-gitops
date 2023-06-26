@@ -29,7 +29,7 @@ spec:
     spec:
       containers:
       - name: ws
-        image: docker.io/shashioracle/ws-server:v1
+        image: docker.io/shashioracle/ws-server:v2
         ports:
         - containerPort: 8080
           name: ws
