@@ -20,7 +20,7 @@ spec:
         args:
         - 
           echo -en '\n';
-          printenv MY_POD_NAME ;
+          printenv MY_POD_NAME;
           done;
         env:
         - name: MY_POD_NAME
