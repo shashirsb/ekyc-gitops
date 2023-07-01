@@ -34,6 +34,10 @@ spec:
           mountPath: /conf
         - name: data
           mountPath: /data
+      volumes:
+      - name: config-map
+        configMap:
+          name: redis-cluster-configmap
   volumeClaimTemplates:
   - metadata:
       name: data
