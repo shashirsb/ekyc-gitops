@@ -1,8 +1,9 @@
+
+---
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
   name: redis-cluster
-  namespace: redis
 spec:
   serviceName: redis-cluster
   replicas: 6
@@ -16,28 +17,30 @@ spec:
     spec:
       containers:
       - name: redis
-        image: redis:latest
-        command: ["redis-server"]
-        args: ["/conf/redis.conf"]
-        env:
-        - name: REDIS_CLUSTER_ANNOUNCE_IP
-          valueFrom:
-            fieldRef:
-              fieldPath: status.podIP
+        image: redis:5.0.1-alpine
         ports:
         - containerPort: 6379
           name: client
         - containerPort: 16379
           name: gossip
+        command: ["/conf/update-node.sh", "redis-server", "/conf/redis.conf"]
+        env:
+        - name: POD_IP
+          valueFrom:
+            fieldRef:
+              fieldPath: status.podIP
         volumeMounts:
         - name: conf
           mountPath: /conf
+          readOnly: false
         - name: data
           mountPath: /data
+          readOnly: false
       volumes:
-      - name: config-map
+      - name: conf
         configMap:
-          name: redis-cluster-configmap
+          name: redis-cluster
+          defaultMode: 0755
   volumeClaimTemplates:
   - metadata:
       name: data
