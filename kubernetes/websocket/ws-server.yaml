@@ -11,6 +11,9 @@ spec:
     name: ws-svc
   selector:
     app: ws
+  sessionAffinityConfig:
+    clientIP:
+      timeoutSeconds: 10
 ---
 apiVersion: apps/v1
 kind: StatefulSet
@@ -29,7 +32,7 @@ spec:
     spec:
       containers:
       - name: ws
-        image: docker.io/shashioracle/ws-server:v2
+        image: docker.io/shashioracle/ws-server:v23
         ports:
         - containerPort: 8080
           name: ws
