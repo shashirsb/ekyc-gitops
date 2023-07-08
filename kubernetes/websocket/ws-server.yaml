@@ -11,9 +11,8 @@ spec:
     name: ws-svc
   selector:
     app: ws
-  sessionAffinityConfig:
-    clientIP:
-      timeoutSeconds: 10
+  sessionAffinity: ClientIP
+
 ---
 apiVersion: apps/v1
 kind: StatefulSet
